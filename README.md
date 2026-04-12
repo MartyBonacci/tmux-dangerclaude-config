@@ -2,6 +2,8 @@
 
 Personal dotfiles for a multi-device tmux + Claude Code workflow. Desktop is the persistence anchor; laptop and phone (Termux) attach via SSH over Tailscale. Sessions outlive every network drop.
 
+**Resilient by design**: `install.sh` copies files into your home directory — not symlinks. Delete this repo and everything still works. The repo is just the versioned source, not a runtime dependency.
+
 ## What's in here
 
 | File | Purpose |
@@ -10,7 +12,8 @@ Personal dotfiles for a multi-device tmux + Claude Code workflow. Desktop is the
 | `tmux-cheatsheet.txt` | 172-line reference for every keybinding, shell helper, and workflow tip. Run `tcheat` to view it from any terminal. |
 | `bashrc.d/10-dangerclaude.sh` | `_dangerclaude` wrapper function + 8 Terminator-themed aliases. |
 | `bashrc.d/20-tmux-helpers.sh` | `t` / `tl` / `tk` / `ts` / `tcheat` shell helpers and SSH auto-attach. |
-| `install.sh` | Idempotent setup script — symlinks, bashrc injection, TPM clone. |
+| `bashrc.d/30-dsync.sh` | `dsync` function — syncs home config edits back into this repo. |
+| `install.sh` | Idempotent setup script — copies files, bashrc injection, TPM clone. |
 
 ## Install on a new machine
 
@@ -24,13 +27,13 @@ Then inside tmux: press `Ctrl+Space` then `Shift+I` to install plugins via TPM.
 
 ## How it works
 
-- **Symlinks, not copies**: `~/.tmux.conf`, `~/.tmux-cheatsheet.txt`, and `~/.dotfiles` are all symlinks into this repo. Edit any of them normally and `git status` sees the change.
-- **Modular bashrc**: Your `~/.bashrc` gets a small sourcing loop appended that reads `~/.dotfiles/bashrc.d/*.sh` at every shell start. The rest of `~/.bashrc` is untouched, so machine-specific PATH/fnm/etc. stays local.
-- **Path-independent**: `~/.dotfiles` is a symlink to this repo's actual location. Each machine can clone to a different path; the sourcing loop is identical everywhere.
+- **Copies, not symlinks**: `install.sh` copies `tmux.conf` → `~/.tmux.conf`, `bashrc.d/*.sh` → `~/.bashrc.d/`, etc. These are real files. Delete this repo and everything keeps running.
+- **Modular bashrc**: Your `~/.bashrc` gets a small sourcing loop appended that reads `~/.bashrc.d/*.sh` at every shell start. The rest of `~/.bashrc` is untouched.
+- **`~/.dotfiles` symlink**: Optional convenience — just makes `cd ~/.dotfiles` work for git operations. Nothing depends on it.
 
 ## The `_dangerclaude` aliases
 
-All 8 of these run the same command — a fully-loaded Claude Code launch with `--dangerously-skip-permissions`, `--continue`, `--name $(basename $PWD)`, `--remote-control`, and `DISABLE_COMPACT=1`:
+All 8 run: `claude --dangerously-skip-permissions --continue --name $DIR --remote-control` with `DISABLE_COMPACT=1`:
 
 | Alias | Reference |
 |---|---|
@@ -51,38 +54,52 @@ All 8 of these run the same command — a fully-loaded Claude Code launch with `
 
 Your tmux session never dies on the desktop. Switch devices freely.
 
-## Updating
+## Editing and syncing configs
 
-Edit any tracked file normally — the symlinks make this transparent:
+Edit any installed file normally:
 
 ```bash
-nano ~/.tmux.conf               # edit the real file (via symlink)
-cd ~/.dotfiles                  # follow symlink to the repo
-git diff                        # see what changed
+nano ~/.tmux.conf       # edit the real installed copy
+```
+
+Then sync your edits back into the repo:
+
+```bash
+dsync                   # copies changed files from ~ back into the repo
+cd ~/.dotfiles          # follow convenience symlink to repo
+git diff                # review what changed
 git add -A && git commit -m "tweak: status bar colors"
 git push
 ```
 
-On the other machine:
+On the other machine, pull and re-install:
 
 ```bash
 cd ~/.dotfiles && git pull
-# if install.sh itself changed, re-run it
-./install.sh
+./install.sh            # refreshes copies from repo (always safe to re-run)
+source ~/.bashrc        # for bashrc.d changes
+# inside tmux: Ctrl+Space + r   for tmux.conf changes
 ```
 
-Re-running `install.sh` is always safe — it's idempotent.
+## What survives what
+
+| Scenario | Effect |
+|---|---|
+| Delete this repo | All configs keep working. `dsync` warns but nothing breaks. Re-clone to resume syncing. |
+| Delete `~/.dotfiles` symlink | Configs still work. `dsync` falls back to checking `~/code-projects/tmux-dangerclaude-config/`. |
+| Delete `~/.bashrc.d/` | Functions/aliases vanish from new shells. Re-run `install.sh` to restore. |
+| Delete `~/.tmux.conf` | Tmux falls back to defaults. Re-run `install.sh` to restore. |
 
 ## Prerequisites
 
 - `claude` binary on `$PATH` (Claude Code) — required for the `_dangerclaude` aliases
 - `tmux` 3.0 or later
 - `git` — for TPM plugin cloning
-- Tailscale — optional, but it's how the multi-device workflow reaches the desktop from anywhere
+- Tailscale — optional, but it's how the multi-device workflow reaches the desktop
 
 ## Termux note
 
-On Termux, Ctrl+Space from the soft keyboard doesn't work natively. Add a macro button to `~/.termux/termux.properties`:
+On Termux, Ctrl+Space doesn't work natively from the soft keyboard. Add a macro button to `~/.termux/termux.properties`:
 
 ```properties
 extra-keys = [ \
@@ -91,4 +108,4 @@ extra-keys = [ \
 ]
 ```
 
-Then `termux-reload-settings`. A "prefix" button will appear — tap it to send Ctrl+Space to tmux. If the soft keyboard disappears after session switching, swipe from the left edge and tap the KEYBOARD button to bring it back.
+Then `termux-reload-settings`. If the keyboard disappears after switching sessions, swipe from the left edge and tap KEYBOARD.
