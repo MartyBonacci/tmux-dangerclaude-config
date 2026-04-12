@@ -1,0 +1,172 @@
+══════════════════════════════════════════════════
+  TMUX CHEAT SHEET   (run: tcheat)
+══════════════════════════════════════════════════
+
+PREFIX KEY:  Ctrl+Space
+(On Termux: hold vol-down for Ctrl, then Space)
+
+Think of prefix as "hey tmux, listen up!"
+After the prefix, the next key is a tmux command.
+
+FORGOT A BINDING?
+  prefix + ?     Shows ALL keybindings live
+
+══════════════════════════════════════════════════
+  SESSIONS
+══════════════════════════════════════════════════
+
+FROM THE SHELL (outside tmux):
+  t                Attach or create "main"
+  t NAME           Attach or create NAME
+  tl               List all sessions
+  tk NAME          Kill session NAME
+  tmux ls          Raw list sessions
+
+INSIDE TMUX (after prefix):
+  d                Detach (keeps it alive)
+  s                Session picker (pick + enter)
+  $                Rename current session
+  (                Previous session
+  )                Next session
+
+══════════════════════════════════════════════════
+  WINDOWS  (like browser tabs)
+══════════════════════════════════════════════════
+
+After prefix:
+  c                Create new window
+  n                Next window
+  p                Previous window
+  1..9             Jump to window 1-9
+  w                Window picker
+  ,                Rename current window
+  &                Kill current window
+
+══════════════════════════════════════════════════
+  PANES  (splits within a window)
+══════════════════════════════════════════════════
+
+After prefix:
+  |                Split vertically (same dir)
+  -                Split horizontally (same dir)
+  ↑ ↓ ← →          Move between panes
+  o                Cycle through panes
+  z                Toggle zoom (fullscreen)
+  x                Kill current pane
+  space            Cycle preset layouts
+  q                Show pane numbers briefly
+  {  }             Swap pane with prev/next
+
+WITH MOUSE (it's on by default):
+  click            Focus that pane
+  drag border      Resize pane
+  scroll           Scrollback history
+  click-drag       Select text to copy
+
+══════════════════════════════════════════════════
+  COPY / PASTE  (vi-style)
+══════════════════════════════════════════════════
+
+After prefix:
+  [                Enter copy mode
+  ]                Paste buffer
+
+Inside copy mode:
+  h j k l          Move cursor (or arrows)
+  space            Start selection
+  enter            Copy selection & exit
+  /                Search forward
+  ?                Search backward
+  q                Exit copy mode
+
+══════════════════════════════════════════════════
+  PLUGINS  (TPM-managed)
+══════════════════════════════════════════════════
+
+After prefix:
+  I                Install plugins (capital i)
+  U                Update plugins
+  alt+u            Remove uninstalled plugins
+
+RESURRECT / CONTINUUM:
+  Ctrl+s           Manually save session state
+  Ctrl+r           Restore last saved state
+
+(Continuum auto-saves every 15 min)
+
+══════════════════════════════════════════════════
+  CONFIG
+══════════════════════════════════════════════════
+
+After prefix:
+  r                Reload ~/.tmux.conf
+  :                Open tmux command prompt
+  ?                List all keybindings
+
+══════════════════════════════════════════════════
+  MULTI-DEVICE WORKFLOW
+══════════════════════════════════════════════════
+
+AT HOME (desktop):
+  t                → land in "main"
+  skynet           → launch Claude Code
+
+ON LAPTOP (via Tailscale SSH):
+  ssh desktop      → auto-attached to "main"
+
+ON PHONE (Termux via Tailscale):
+  desktop          → auto-attached to "main"
+                     (if you set alias)
+
+Detach from anywhere:  prefix + d
+Your session never dies on the desktop.
+
+══════════════════════════════════════════════════
+  CLAUDE CODE LAUNCHER ALIASES
+══════════════════════════════════════════════════
+
+All run the same wrapper:
+  claude --dangerously-skip-permissions
+         --continue
+         --name <current-dir>
+         --remote-control
+
+  skynet              The rogue AI classic
+  t800                Arnold's terminator
+  t1000               Liquid metal T2
+  214am               Skynet awakens (2:14 AM)
+  terminate           Deadpan menace
+  trustmebro          Famous last words
+  claudenator         Portmanteau
+  whatcouldgowrong    Ironic dread comedy
+
+══════════════════════════════════════════════════
+  QUICK TROUBLESHOOTING
+══════════════════════════════════════════════════
+
+Status bar looks wrong after update?
+  prefix + r        Reload config
+
+Tmux feels laggy?
+  Already fixed: escape-time=10ms
+
+Can't resize panes on phone?
+  Use mouse-drag on borders.
+
+Accidentally nested tmux?
+  Outer prefix still reaches outer tmux.
+  Inner: prefix+prefix to send prefix to
+  the inner one.
+
+Want to see the full tmux manual?
+  man tmux          (very long, grep it)
+
+══════════════════════════════════════════════════
+  FILES YOU CAN EDIT
+══════════════════════════════════════════════════
+
+  ~/.tmux.conf              tmux config
+  ~/.bashrc                 shell helpers
+  ~/.tmux-cheatsheet.txt    THIS FILE
+
+══════════════════════════════════════════════════
