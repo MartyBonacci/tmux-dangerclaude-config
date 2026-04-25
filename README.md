@@ -6,6 +6,8 @@
 >
 > Use only on a personal machine, in directories you trust, with no production credentials in your shell environment. **The Terminator names are a deliberate warning, not branding.** If any of this surprises you, do not run `skynet`. See [Security notes](#security-notes) below for a flag-by-flag breakdown.
 
+> 💡 **Want this without the warnings?** See [tmux-auto-claude-config](https://github.com/MartyBonacci/tmux-auto-claude-config) — same tmux + multi-device persistence, but the wrapper uses `--permission-mode auto` (classifier-backed; pauses for ~30 categories of risky actions instead of doing them blindly).
+
 Personal dotfiles for a multi-device tmux + Claude Code workflow. Desktop is the persistence anchor; laptop and phone (Termux) attach via SSH over Tailscale. Sessions outlive every network drop.
 
 **Resilient by design**: `install.sh` copies files into your home directory — not symlinks. Delete this repo and everything still works. The repo is just the versioned source, not a runtime dependency.
