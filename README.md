@@ -1,5 +1,11 @@
 # tmux-dangerclaude-config
 
+> ⚠️ **Read this before installing.**
+>
+> The nine `_dangerclaude` aliases in this repo (`skynet`, `t800`, `t1000`, `214am`, `terminate`, `trustmebro`, `claudenator`, `whatcouldgowrong`, `itcouldonlygoodhappen`) launch Claude Code with `--dangerously-skip-permissions`, which removes **all** per-action confirmation prompts. Once invoked, Claude can read, write, execute, and delete anything your user account can — without asking. Files Claude reads can also prompt-inject it into doing things you didn't ask for.
+>
+> Use only on a personal machine, in directories you trust, with no production credentials in your shell environment. **The Terminator names are a deliberate warning, not branding.** If any of this surprises you, do not run `skynet`. See [Security notes](#security-notes) below for a flag-by-flag breakdown.
+
 Personal dotfiles for a multi-device tmux + Claude Code workflow. Desktop is the persistence anchor; laptop and phone (Termux) attach via SSH over Tailscale. Sessions outlive every network drop.
 
 **Resilient by design**: `install.sh` copies files into your home directory — not symlinks. Delete this repo and everything still works. The repo is just the versioned source, not a runtime dependency.
@@ -18,12 +24,20 @@ Personal dotfiles for a multi-device tmux + Claude Code workflow. Desktop is the
 ## Install on a new machine
 
 ```bash
-git clone git@github.com:MartyBonacci/tmux-dangerclaude-config.git ~/code-projects/tmux-dangerclaude-config
+git clone https://github.com/MartyBonacci/tmux-dangerclaude-config.git ~/code-projects/tmux-dangerclaude-config
 ~/code-projects/tmux-dangerclaude-config/install.sh
 source ~/.bashrc
 ```
 
-Then inside tmux: press `Ctrl+Space` then `Shift+I` to install plugins via TPM.
+The installer previews the lines it wants to append to `~/.bashrc` and prompts for confirmation. Then inside tmux: press `Ctrl+Space` then `Shift+I` to install plugins via TPM.
+
+### Install options
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `INSTALL_YES=1` | unset | Skip the `~/.bashrc` confirmation prompt (for non-interactive installs) |
+| `TPM_REF=<ref>` | `v3.1.0` | TPM tag/branch to clone — pinned to a known release for supply-chain safety |
+| `TMUX_AUTO_ATTACH=0` | unset (=1) | Export in your shell profile to disable the SSH auto-attach into the `main` tmux session |
 
 ## How it works
 
@@ -33,7 +47,7 @@ Then inside tmux: press `Ctrl+Space` then `Shift+I` to install plugins via TPM.
 
 ## The `_dangerclaude` aliases
 
-All 8 run: `claude --dangerously-skip-permissions --continue --name $DIR --remote-control` with `DISABLE_COMPACT=1`:
+All 9 run: `claude --dangerously-skip-permissions --continue --name $DIR --remote-control` with `DISABLE_COMPACT=1`:
 
 | Alias | Reference |
 |---|---|
@@ -45,6 +59,26 @@ All 8 run: `claude --dangerously-skip-permissions --continue --name $DIR --remot
 | `trustmebro` | Famous last words |
 | `claudenator` | Claude + Terminator portmanteau |
 | `whatcouldgowrong` | Ironic dread-comedy |
+| `itcouldonlygoodhappen` | Mangled-grammar optimism (inverse of `whatcouldgowrong`) |
+
+## Security notes
+
+These aliases trade safety for speed. Here's what each flag actually does, so you can decide whether to install them:
+
+| Flag / env | What it does | Risk |
+|---|---|---|
+| `--dangerously-skip-permissions` | Removes Claude's per-action approval prompts for tool use | Claude can run any shell command, edit any file, delete anything your user can. Files Claude reads can prompt-inject and hijack behavior. |
+| `--continue` | Resumes the most recent session for this directory | Low |
+| `--name "$(basename "$PWD")"` | Names the session after `$PWD` | Low |
+| `--remote-control` | Enables Claude Code's Remote Control feature | **Verify in your installed `claude`** — run `claude --help \| grep -i remote-control`. Behavior has varied across Claude Code versions; some surface a network listener. If your `claude --help` doesn't list `--remote-control` (e.g. v2.1.x only shows `--remote-control-session-name-prefix`), the wrapper will still pass it — Claude may ignore unknown flags or error out. Edit `bashrc.d/10-dangerclaude.sh` to remove it if unwanted or unsupported. |
+| `DISABLE_COMPACT=1` | Skips automatic context-compaction prompts | Low |
+
+**Friend-protection tips:**
+
+- Don't run on a machine with production credentials in `~/.aws/`, `~/.ssh/`, `.env` files, browser session storage, or password manager exports you can't afford to lose.
+- Don't run inside repos containing files from untrusted sources (random GitHub clones, downloaded markdown, scraped content). Those files are read by Claude and can prompt-inject.
+- The aliases use `--continue` per-directory; if you need a fresh session, run `claude` directly without the wrapper.
+- TPM is pinned to `v3.1.0` in `install.sh`. To audit/update, see https://github.com/tmux-plugins/tpm/releases.
 
 ## Daily workflow
 

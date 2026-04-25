@@ -1,0 +1,24 @@
+# Claude Code local-only settings (per-machine permissions, not shared)
+.claude/settings.local.json
+
+# Local environment files — never commit these
+.env
+.env.local
+.env.*.local
+
+# install.sh creates these when overwriting modified files
+*.backup.*
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor backups and per-machine configs
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Logs from external Claude Code plugins (e.g. `remember`) that scope to project dir
+.remember/

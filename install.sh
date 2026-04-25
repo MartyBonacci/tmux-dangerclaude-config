@@ -95,7 +95,7 @@ BASHRC="$HOME/.bashrc"
 if grep -qF "$MARKER" "$BASHRC"; then
   ok "bashrc.d sourcing loop already present in ~/.bashrc"
 else
-  cat >> "$BASHRC" <<'EOF'
+  BASHRC_BLOCK=$(cat <<'EOF'
 
 # Load modular shell config from ~/.bashrc.d/
 # (installed by tmux-dangerclaude-config — survives repo deletion)
@@ -106,17 +106,46 @@ if [ -d "$HOME/.bashrc.d" ]; then
   unset _rc
 fi
 EOF
-  ok "appended bashrc.d sourcing loop to ~/.bashrc"
+)
+  info "About to append the following to $BASHRC:"
+  echo
+  printf '%s\n' "$BASHRC_BLOCK" | sed 's/^/    /'
+  echo
+
+  proceed=0
+  if [ "${INSTALL_YES:-0}" = "1" ]; then
+    proceed=1
+  elif [ -t 0 ]; then
+    if read -r -p "Append this to ~/.bashrc? [y/N] " reply && [[ "$reply" =~ ^[Yy] ]]; then
+      proceed=1
+    else
+      warn "Skipped ~/.bashrc modification per user response."
+      warn "Re-run with INSTALL_YES=1 to apply non-interactively, or paste the block above manually."
+    fi
+  else
+    warn "Non-interactive run with INSTALL_YES unset — skipping ~/.bashrc modification."
+    warn "Re-run with INSTALL_YES=1 to apply non-interactively, or paste the block above manually."
+  fi
+
+  if [ "$proceed" = "1" ]; then
+    printf '%s\n' "$BASHRC_BLOCK" >> "$BASHRC"
+    ok "appended bashrc.d sourcing loop to ~/.bashrc"
+  fi
 fi
 
 # ─── 5. TPM ─────────────────────────────────────────────────────────────────
+# Pinned to a known release for supply-chain safety. Update consciously by
+# changing TPM_REF below, or override at install time:
+#   TPM_REF=master ./install.sh
+# Releases: https://github.com/tmux-plugins/tpm/releases
 TPM_DIR="$HOME/.tmux/plugins/tpm"
+TPM_REF="${TPM_REF:-v3.1.0}"
 if [ -d "$TPM_DIR/.git" ]; then
-  ok "TPM already installed"
+  ok "TPM already installed (this script does not auto-update existing installs)"
 else
-  info "Cloning TPM (tmux plugin manager)..."
-  git clone --depth 1 https://github.com/tmux-plugins/tpm "$TPM_DIR"
-  ok "TPM installed"
+  info "Cloning TPM (tmux plugin manager) at $TPM_REF..."
+  git clone --depth 1 --branch "$TPM_REF" https://github.com/tmux-plugins/tpm "$TPM_DIR"
+  ok "TPM installed at $TPM_REF"
 fi
 
 # ─── 6. Claude sanity check ─────────────────────────────────────────────────

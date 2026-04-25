@@ -39,6 +39,7 @@ tcheat() {
 # tmux session. Two commands from lock screen to working:
 #   unlock → ssh desktop → (you're in tmux, see your last state)
 # Conditions: only on SSH, only if not already in tmux, only interactive shells.
-if [[ -n "$SSH_CONNECTION" && -z "$TMUX" && $- == *i* ]]; then
+# Opt out by exporting TMUX_AUTO_ATTACH=0 in ~/.bash_profile or login env.
+if [[ -n "$SSH_CONNECTION" && -z "$TMUX" && $- == *i* && "${TMUX_AUTO_ATTACH:-1}" == "1" ]]; then
   t main
 fi

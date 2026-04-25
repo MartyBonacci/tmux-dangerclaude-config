@@ -139,6 +139,7 @@ All run the same wrapper:
   trustmebro          Famous last words
   claudenator         Portmanteau
   whatcouldgowrong    Ironic dread comedy
+  itcouldonlygoodhappen   Mangled-grammar optimism
 
 ══════════════════════════════════════════════════
   QUICK TROUBLESHOOTING
