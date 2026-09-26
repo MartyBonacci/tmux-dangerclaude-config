@@ -49,7 +49,7 @@ The installer previews the lines it wants to append to `~/.bashrc` and prompts f
 
 ## The `_dangerclaude` aliases
 
-All 9 run: `claude --dangerously-skip-permissions --continue --name $DIR --remote-control` with `DISABLE_COMPACT=1`:
+All 9 run: `claude --dangerously-skip-permissions --continue --name $DIR --remote-control` (auto-compaction left at its default, on):
 
 | Alias | Reference |
 |---|---|
@@ -73,7 +73,6 @@ These aliases trade safety for speed. Here's what each flag actually does, so yo
 | `--continue` | Resumes the most recent session for this directory | Low |
 | `--name "$(basename "$PWD")"` | Names the session after `$PWD` | Low |
 | `--remote-control` | Enables Claude Code's Remote Control feature | **Verify in your installed `claude`** — run `claude --help \| grep -i remote-control`. Behavior has varied across Claude Code versions; some surface a network listener. If your `claude --help` doesn't list `--remote-control` (e.g. v2.1.x only shows `--remote-control-session-name-prefix`), the wrapper will still pass it — Claude may ignore unknown flags or error out. Edit `bashrc.d/10-dangerclaude.sh` to remove it if unwanted or unsupported. |
-| `DISABLE_COMPACT=1` | Skips automatic context-compaction prompts | Low |
 
 **Friend-protection tips:**
 

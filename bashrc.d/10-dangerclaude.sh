@@ -8,9 +8,9 @@
 # mood. All call the same underlying wrapper so logic stays DRY.
 # Features: skip all permission checks, continue prior session (remote-control
 # mode handles fresh directories gracefully), name session after current
-# directory, enable remote control, skip compact prompts.
+# directory, enable remote control. Auto-compaction stays on (default).
 _dangerclaude() {
-  DISABLE_COMPACT=1 command claude \
+  command claude \
     --dangerously-skip-permissions \
     --continue \
     --name "$(basename "$PWD")" \
