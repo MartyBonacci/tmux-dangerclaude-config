@@ -18,7 +18,7 @@ Personal dotfiles for a multi-device tmux + Claude Code workflow. Desktop is the
 |------|---------|
 | `tmux.conf` | Full tmux config: Ctrl+Space prefix, true-color, 50k scrollback, top status bar, mouse on, aggressive-resize, TPM plugins (resurrect, continuum, yank, sensible). |
 | `tmux-cheatsheet.txt` | 172-line reference for every keybinding, shell helper, and workflow tip. Run `tcheat` to view it from any terminal. |
-| `bashrc.d/10-dangerclaude.sh` | `_dangerclaude` wrapper function + 8 Terminator-themed aliases. |
+| `bashrc.d/10-dangerclaude.sh` | `_dangerclaude` wrapper function + 9 Terminator-themed aliases. |
 | `bashrc.d/20-tmux-helpers.sh` | `t` / `tl` / `tk` / `ts` / `tcheat` shell helpers and SSH auto-attach. |
 | `bashrc.d/30-dsync.sh` | `dsync` function — syncs home config edits back into this repo. |
 | `install.sh` | Idempotent setup script — copies files, bashrc injection, TPM clone. |
