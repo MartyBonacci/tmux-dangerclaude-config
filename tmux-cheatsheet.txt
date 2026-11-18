@@ -140,6 +140,7 @@ All run the same wrapper:
   claudenator         Portmanteau
   whatcouldgowrong    Ironic dread comedy
   itcouldonlygoodhappen   Mangled-grammar optimism
+  holdmybeer          Famous last words, the other flavor
 
 ══════════════════════════════════════════════════
   QUICK TROUBLESHOOTING

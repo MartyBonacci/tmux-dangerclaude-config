@@ -2,7 +2,7 @@
 
 > ⚠️ **Read this before installing.**
 >
-> The nine `_dangerclaude` aliases in this repo (`skynet`, `t800`, `t1000`, `214am`, `terminate`, `trustmebro`, `claudenator`, `whatcouldgowrong`, `itcouldonlygoodhappen`) launch Claude Code with `--dangerously-skip-permissions`, which removes **all** per-action confirmation prompts. Once invoked, Claude can read, write, execute, and delete anything your user account can — without asking. Files Claude reads can also prompt-inject it into doing things you didn't ask for.
+> The ten `_dangerclaude` aliases in this repo (`skynet`, `t800`, `t1000`, `214am`, `terminate`, `trustmebro`, `claudenator`, `whatcouldgowrong`, `itcouldonlygoodhappen`, `holdmybeer`) launch Claude Code with `--dangerously-skip-permissions`, which removes **all** per-action confirmation prompts. Once invoked, Claude can read, write, execute, and delete anything your user account can — without asking. Files Claude reads can also prompt-inject it into doing things you didn't ask for.
 >
 > Use only on a personal machine, in directories you trust, with no production credentials in your shell environment. **The Terminator names are a deliberate warning, not branding.** If any of this surprises you, do not run `skynet`. See [Security notes](#security-notes) below for a flag-by-flag breakdown.
 
@@ -18,7 +18,7 @@ Personal dotfiles for a multi-device tmux + Claude Code workflow. Desktop is the
 |------|---------|
 | `tmux.conf` | Full tmux config: Ctrl+Space prefix, true-color, 50k scrollback, top status bar, mouse on, aggressive-resize, TPM plugins (resurrect, continuum, yank, sensible). |
 | `tmux-cheatsheet.txt` | 172-line reference for every keybinding, shell helper, and workflow tip. Run `tcheat` to view it from any terminal. |
-| `bashrc.d/10-dangerclaude.sh` | `_dangerclaude` wrapper function + 9 Terminator-themed aliases. |
+| `bashrc.d/10-dangerclaude.sh` | `_dangerclaude` wrapper function + 10 Terminator-themed aliases. |
 | `bashrc.d/20-tmux-helpers.sh` | `t` / `tl` / `tk` / `ts` / `tcheat` shell helpers and SSH auto-attach. |
 | `bashrc.d/30-dsync.sh` | `dsync` function — syncs home config edits back into this repo. |
 | `install.sh` | Idempotent setup script — copies files, bashrc injection, TPM clone. |
@@ -49,7 +49,7 @@ The installer previews the lines it wants to append to `~/.bashrc` and prompts f
 
 ## The `_dangerclaude` aliases
 
-All 9 run: `claude --dangerously-skip-permissions --continue --name $DIR --remote-control` (auto-compaction left at its default, on):
+All 10 run: `claude --dangerously-skip-permissions --continue --name $DIR --remote-control` (auto-compaction left at its default, on):
 
 | Alias | Reference |
 |---|---|
@@ -62,6 +62,7 @@ All 9 run: `claude --dangerously-skip-permissions --continue --name $DIR --remot
 | `claudenator` | Claude + Terminator portmanteau |
 | `whatcouldgowrong` | Ironic dread-comedy |
 | `itcouldonlygoodhappen` | Mangled-grammar optimism (inverse of `whatcouldgowrong`) |
+| `holdmybeer` | Famous last words, the other flavor |
 
 ## Security notes
 
